@@ -1,0 +1,54 @@
+<project name="SCR-testing" basedir="." default="test">
+
+    <property name="max.java.heap" value="-J-Xmx14g"/>
+    <property name="junit.max.java.heap" value="-Xmx14g"/>
+
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="bin"/>
+    <property name="test.src.dir" value="test"/>
+    <property name="test.build.dir" value="${build.dir}"/>
+   
+   
+
+    <path id="compile.classpath">
+        <pathelement location="lib/JFLAP-7.0_With_Source.jar"/>
+    	<pathelement location="lib/rltlconv.jar"/>
+    </path>
+
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+   
+
+    <target name="compile">
+        <mkdir dir="${build.dir}"/>
+        <!-- Compile source /-->
+        <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false">
+            <classpath refid="compile.classpath"/>
+        </javac>
+    </target>
+
+
+    <target name="test" depends="compile, run-info">
+        <mkdir dir="${test.report.dir}"/>
+        <junit printsummary="on" haltonfailure="yes" fork="true">
+            <jvmarg value="-XX:MaxPermSize=1g"/>
+            <jvmarg value="${junit.max.java.heap}"/>
+            <classpath>
+                <path refid="randoop.test.classpath"/>
+                <pathelement location="${test.build.dir}"/>
+            </classpath>
+            <!--formatter type="failure"/-->
+            <formatter type="brief"/>
+            <test name="${test.to.run}" todir="${test.report.dir}" outfile="${test.report.file}"/>
+        </junit>
+    </target>
+
+
+    <target name="run-info">
+        <echo message="Running case: ${case}"/>
+    </target>
+
+
+</project>
