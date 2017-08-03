@@ -54,15 +54,18 @@ public class LTLModelCounter {
 	}
 	
 	private static void runCommand() throws IOException, InterruptedException{
-		Process p = Runtime.getRuntime().exec("./rltlconv.sh @rltlconv.txt --props --formula --apa --nba --min --nfa --dfa > rltlconv-out.txt");
+		Process p = Runtime.getRuntime().exec("./rltlconv.sh @rltlconv.txt --props --formula --apa --nba --min --nfa --dfa");
 		
 		InputStream in = p.getInputStream();
     	InputStreamReader inread = new InputStreamReader(in);
     	BufferedReader bufferedreader = new BufferedReader(inread);
     	String aux;
+    	String out = "";
 	    while ((aux = bufferedreader.readLine()) != null) {
-	    	
+	    	out += aux+"\n";
 	    }
+	    if(out!="")
+	    	writeFile("rltlconv-out.txt",out);
 	    
 	 // Leer el error del programa.
     	InputStream err = p.getErrorStream();
