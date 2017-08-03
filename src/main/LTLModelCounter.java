@@ -1,10 +1,13 @@
 package main;
 
 import java.awt.Point;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -48,6 +51,18 @@ public class LTLModelCounter {
           }
         }
 	}
+	
+	private static void runCommand() throws IOException{
+		Process p = Runtime.getRuntime().exec("./rltlconv.sh @rltlconv.txt --props --formula --apa --nba --min --nfa --dfa > rltlconv-out.txt");
+		
+		InputStream in = p.getInputStream();
+    	InputStreamReader inread = new InputStreamReader(in);
+    	BufferedReader bufferedreader = new BufferedReader(inread);
+    	String aux;
+	    while ((aux = bufferedreader.readLine()) != null) {
+	    
+	    }
+	}
 	public static Nfa ltl2dfa(String formula) throws IOException{
 //		ConversionVal[] conv = {Conversion.PROPS(), Conversion.FORMULA(),Conversion.APA(),Conversion.NBA(), Conversion.MIN(), Conversion.NFA(), Conversion.DFA()};
 //		Object res = RltlConv.convert(formula, conv);
@@ -57,9 +72,8 @@ public class LTLModelCounter {
 		
 		writeFile(fname,formula);
 		
-		Process p = Runtime.getRuntime().exec("./rltlconv.sh @rltlconv.txt --props --formula --apa --nba --min --nfa --dfa > rltlconv-out.txt");
-		try{p.waitFor();//wait the outcome
-		}catch(Exception e){}
+		runCommand();
+		
 		Object res = Main.load("@rltlconv-out.txt");
 		Nfa fsa = (Nfa) RltlConv.convert(res, Conversion.DFA());
 		return fsa.toNamedNfa();
