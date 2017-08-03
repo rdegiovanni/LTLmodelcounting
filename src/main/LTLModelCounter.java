@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.Point;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -33,20 +34,32 @@ import scala.collection.immutable.VectorIterator;
 
 public class LTLModelCounter {
 
+	private static void writeFile(String fname,String text) throws IOException{
+		BufferedWriter output = null;
+        try {
+            File file = new File(fname);
+            output = new BufferedWriter(new FileWriter(file));
+            output.write(text);
+        } catch ( IOException e ) {
+            e.printStackTrace();
+        } finally {
+          if ( output != null ) {
+            output.close();
+          }
+        }
+	}
 	public static Nfa ltl2dfa(String formula) throws IOException{
 //		ConversionVal[] conv = {Conversion.PROPS(), Conversion.FORMULA(),Conversion.APA(),Conversion.NBA(), Conversion.MIN(), Conversion.NFA(), Conversion.DFA()};
 //		Object res = RltlConv.convert(formula, conv);
 		
 		//write results to file
 		String fname = "rltlconv.txt";
-		File f = new File(fname);
-		f.createNewFile();
-		FileWriter writer = new FileWriter(f);
-		writer.append(formula);
-		writer.close();
+		
+		writeFile(fname,formula);
 		
 		Process p = Runtime.getRuntime().exec("./rltlconv.sh @rltlconv.txt --props --formula --apa --nba --min --nfa --dfa > rltlconv-out.txt");
-		p.getInputStream();//wait the outcome
+		try{p.waitFor();//wait the outcome
+		}catch(Exception e){}
 		Object res = Main.load("@rltlconv-out.txt");
 		Nfa fsa = (Nfa) RltlConv.convert(res, Conversion.DFA());
 		return fsa.toNamedNfa();
