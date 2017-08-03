@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -52,7 +53,7 @@ public class LTLModelCounter {
         }
 	}
 	
-	private static void runCommand() throws IOException{
+	private static void runCommand() throws IOException, InterruptedException{
 		Process p = Runtime.getRuntime().exec("./rltlconv.sh @rltlconv.txt --props --formula --apa --nba --min --nfa --dfa > rltlconv-out.txt");
 		
 		InputStream in = p.getInputStream();
@@ -60,10 +61,42 @@ public class LTLModelCounter {
     	BufferedReader bufferedreader = new BufferedReader(inread);
     	String aux;
 	    while ((aux = bufferedreader.readLine()) != null) {
-	    
+	    	
 	    }
+	    
+	 // Leer el error del programa.
+    	InputStream err = p.getErrorStream();
+    	InputStreamReader errread = new InputStreamReader(err);
+    	BufferedReader errbufferedreader = new BufferedReader(errread);
+    	
+	    while ((aux = errbufferedreader.readLine()) != null) {
+	    	System.out.println("ERR: " + aux);
+	    }
+	   
+	    // Check for failure
+		if (p.waitFor() != 0) {
+			System.out.println("exit value = " + p.exitValue());
+		}
+  
+		// Close the InputStream
+    	bufferedreader.close();
+    	inread.close();
+    	in.close();
+   		// Close the ErrorStream
+   		errbufferedreader.close();
+   		errread.close();
+   		err.close();
+    		
+   		if (p!=null) {
+//   			InputStream is = p.getInputStream();
+ //  			InputStream es = p.getErrorStream();
+  			OutputStream os = p.getOutputStream();
+//   				if (is!=null) is.close();
+//   				if (es!=null) es.close();
+			if (os!=null) os.close();
+   		}
 	}
-	public static Nfa ltl2dfa(String formula) throws IOException{
+	public static Nfa ltl2dfa(String formula) throws IOException, InterruptedException{
 //		ConversionVal[] conv = {Conversion.PROPS(), Conversion.FORMULA(),Conversion.APA(),Conversion.NBA(), Conversion.MIN(), Conversion.NFA(), Conversion.DFA()};
 //		Object res = RltlConv.convert(formula, conv);
 		
