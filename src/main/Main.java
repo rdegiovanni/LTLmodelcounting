@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.util.AbstractMap.SimpleEntry;
@@ -137,7 +138,7 @@ public class Main {
 		System.out.println("Use -ltl=dom_goals_ltl [-bc=boundary_condition] -k=bound_for_model_counting");
 	}
 	
-	private static BigInteger count(String formula, long bound){
+	private static BigInteger count(String formula, long bound) throws IOException{
 //		System.out.println(formula);
 		
 		Nfa dfa = LTLModelCounter.ltl2dfa(formula);

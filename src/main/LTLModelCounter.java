@@ -38,20 +38,17 @@ public class LTLModelCounter {
 //		Object res = RltlConv.convert(formula, conv);
 		
 		//write results to file
-		String fname = "/home/zu/rltlconv.txt";
+		String fname = "rltlconv.txt";
 		File f = new File(fname);
 		f.createNewFile();
 		FileWriter writer = new FileWriter(f);
 		writer.append(formula);
 		writer.close();
 		
-		String ff = Main.load("@"+fname);
-//				ConversionVal[] conv = {Conversion.PROPS(), Conversion.FORMULA(),Conversion.APA(),Conversion.NBA(), Conversion.MIN(), Conversion.NFA(), Conversion.DFA()};
-		String [] conv = {"--props", "--formula", "--apa", "--nba", "--min", "--nfa", "--dfa"};
-		
-		Object res = RltlConv.convert(ff, conv);
-		Nfa fsa = (Nfa) res;
-		
+		Process p = Runtime.getRuntime().exec("./rltlconv.sh @rltlconv.txt --props --formula --apa --nba --min --nfa --dfa > rltlconv-out.txt");
+		p.getInputStream();//wait the outcome
+		Object res = Main.load("@rltlconv-out.txt");
+		Nfa fsa = (Nfa) RltlConv.convert(res, Conversion.DFA());
 		return fsa.toNamedNfa();
 	}
 	

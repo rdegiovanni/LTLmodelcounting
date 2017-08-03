@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
-
+import java.util.LinkedList;
 
 import org.junit.Test;
 
@@ -119,6 +119,45 @@ public class LamaTest {
 		
 		Nfa fsa = (Nfa) res;
 		System.out.println(fsa);
+	}
+	
+	@Test
+	public void test7() throws IOException {
+		String formula = "LTL=G((po && X(po)) -> X(X(! hw))) && ! ((hw && m)) && X(! ((hw && m)) && X(! ((hw && m)) && X((hw && m)))),ALPHABET=[po,hw,m]";
+
+		//write results to file
+		File f = new File("rltlconv.txt");
+		f.createNewFile();
+		FileWriter writer = new FileWriter(f);
+		writer.append(formula);
+		writer.close();
+		
+		Process p = Runtime.getRuntime().exec("./rltlconv.sh @rltlconv.txt --props --formula --apa --nba --min --nfa --dfa > rltlconv-out.txt");
+		Object res = Main.load("@rltlconv-out.txt");
+		
+		Nfa fsa = (Nfa) RltlConv.convert(res, Conversion.DFA());
+		System.out.println(fsa);
+	}
+	
+	@Test
+	public void test8() throws IOException {
+		String formula = "LTL=G((po && X(po)) -> X(X(! hw))) && ! ((hw && m)) && X(! ((hw && m)) && X(! ((hw && m)) && X((hw && m)))),ALPHABET=[po,hw,m]";
+
+		ConversionVal[] conv = {Conversion.PROPS(), Conversion.FORMULA(),Conversion.APA(),Conversion.NBA(), Conversion.MIN(), Conversion.NFA(), Conversion.DFA()};
+//		String [] conv = {"--props", "--formula", "--apa", "--nba", "--min", "--nfa", "--dfa"};
+		Object res = RltlConv.convert(formula, conv);
+		Nfa fsa = (Nfa) res;
+		
+		//write results to file
+		File f = new File("rltlconv-out.txt");
+		f.createNewFile();
+		FileWriter writer = new FileWriter(f);
+		writer.append(fsa.toString());
+		writer.close();
+
+		res = Main.load("@rltlconv-out.txt");
+		fsa = (Nfa) RltlConv.convert(res, Conversion.DFA());
+		System.out.println(fsa.toNamedNfa());
 	}
 	
 }

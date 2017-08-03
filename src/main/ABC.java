@@ -1,9 +1,5 @@
 package main;
 import java.math.BigInteger;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.apache.commons.lang3.text.translate.NumericEntityUnescaper.OPTION;
 
 import vlab.cs.ucsb.edu.DriverProxy;
 import vlab.cs.ucsb.edu.DriverProxy.Option;
@@ -17,7 +13,7 @@ public class ABC {
 //    abcDriver.setOption(Option.ENABLE_IMPLICATIONS);
 //    abcDriver.setOption(Option.USE_SIGNED_INTEGERS);
     abcDriver.setOption(Option.REGEX_FLAG,Option.REGEX_FLAG_ANYSTRING);
-    
+
     String constraint = "(set-logic QF_S)\n"
 		+ "(declare-fun x () String)\n"
         + "(assert (in x /"+formula+"/))\n"
