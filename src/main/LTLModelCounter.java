@@ -1,6 +1,9 @@
 package main;
 
 import java.awt.Point;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -15,6 +18,7 @@ import de.uni_luebeck.isp.rltlconv.automata.Nfa;
 import de.uni_luebeck.isp.rltlconv.automata.Sign;
 import de.uni_luebeck.isp.rltlconv.automata.State;
 import de.uni_luebeck.isp.rltlconv.cli.Conversion;
+import de.uni_luebeck.isp.rltlconv.cli.Main;
 import de.uni_luebeck.isp.rltlconv.cli.RltlConv;
 import scala.Tuple2;
 import scala.collection.Iterator;
@@ -29,10 +33,23 @@ import scala.collection.immutable.VectorIterator;
 
 public class LTLModelCounter {
 
-	public static Nfa ltl2dfa(String formula){
+	public static Nfa ltl2dfa(String formula) throws IOException{
+//		ConversionVal[] conv = {Conversion.PROPS(), Conversion.FORMULA(),Conversion.APA(),Conversion.NBA(), Conversion.MIN(), Conversion.NFA(), Conversion.DFA()};
+//		Object res = RltlConv.convert(formula, conv);
 		
-		ConversionVal[] conv = {Conversion.PROPS(), Conversion.FORMULA(), Conversion.APA(),Conversion.NBA(), Conversion.MIN(), Conversion.NFA(), Conversion.DFA()};
-		Object res = RltlConv.convert(formula, conv);
+		//write results to file
+		String fname = "/home/zu/rltlconv.txt";
+		File f = new File(fname);
+		f.createNewFile();
+		FileWriter writer = new FileWriter(f);
+		writer.append(formula);
+		writer.close();
+		
+		String ff = Main.load("@"+fname);
+//				ConversionVal[] conv = {Conversion.PROPS(), Conversion.FORMULA(),Conversion.APA(),Conversion.NBA(), Conversion.MIN(), Conversion.NFA(), Conversion.DFA()};
+		String [] conv = {"--props", "--formula", "--apa", "--nba", "--min", "--nfa", "--dfa"};
+		
+		Object res = RltlConv.convert(ff, conv);
 		Nfa fsa = (Nfa) res;
 		
 		return fsa.toNamedNfa();
