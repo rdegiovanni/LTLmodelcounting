@@ -155,8 +155,9 @@ public class LTLModelCounter {
 		Iterator<String> lit = ltl_ba.alphabet().iterator();
 		while(lit.hasNext()){
 			String l = lit.next();
+			System.out.println(l);
 			if(!labelIDs.containsKey(l)){
-				labelIDs.put(l, labelIDs.keySet().size());
+				labelIDs.put("\""+l+"\"", labelIDs.keySet().size());
 			}
 		}
 		
@@ -189,6 +190,7 @@ public class LTLModelCounter {
 			
 //			String label = getLabel(l);
 			int base = 97;//a
+			System.out.println("l:" +l.toString());
 			String label = ""+Character.toChars(base+labelIDs.get(l))[0];
 			
 			Iterator<DirectedState> listIt = o._2().iterator();
