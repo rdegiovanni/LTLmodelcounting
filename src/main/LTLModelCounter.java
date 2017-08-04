@@ -135,6 +135,7 @@ public class LTLModelCounter {
 		java.util.Map<String,Integer> ids = new HashMap<>();
 		//get initial node
 		State in = ltl_ba.start().head(); //CUIDADO:que pasa si tenemos varios estados iniciales.
+		System.out.println("initials: "+ltl_ba.start().length());
 		//create and set initial state
 		automata.State is = fsa.createState(new Point());
 		fsa.setInitialState(is);
