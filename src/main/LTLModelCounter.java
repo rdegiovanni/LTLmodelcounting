@@ -117,10 +117,21 @@ public class LTLModelCounter {
 	}
 	
 	public static Nba ltl2nba(String formula) throws IOException, InterruptedException{
-		ConversionVal[] conv = {Conversion.FORMULA(),Conversion.PROPS(), Conversion.NBA(), Conversion.MIN()};
+//		ConversionVal[] conv = {Conversion.FORMULA(),Conversion.PROPS(), Conversion.NBA(), Conversion.MIN()};
 //		String [] conv = {"--props", "--formula", "--apa", "--nba", "--min", "--nfa", "--dfa"};
-		Object res = RltlConv.convert(formula, conv);
-		Nba nba = (Nba) res;		
+//		Object res = RltlConv.convert(formula, conv);
+//		Nba nba = (Nba) res;
+		
+		//write results to file
+		String fname = "rltlconv.txt";
+		
+		writeFile(fname,formula);
+		
+		runCommand("./rltlconv.sh @rltlconv.txt --formula --props --nba --min");
+		
+		Object res = Main.load("@rltlconv-out.txt");
+		
+		Nba nba = (Nba) RltlConv.convert(res, Conversion.NBA());
 		return nba.toNamedNba();
 	}
 	
