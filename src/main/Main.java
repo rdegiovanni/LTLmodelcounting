@@ -11,6 +11,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import de.uni_luebeck.isp.rltlconv.automata.Nba;
 import de.uni_luebeck.isp.rltlconv.automata.Nfa;
 import regular.Discretizer;
 
@@ -138,24 +139,25 @@ public class Main {
 		System.out.println("Use -ltl=dom_goals_ltl [-bc=boundary_condition] -k=bound_for_model_counting");
 	}
 	
-	private static BigInteger count(String formula, long bound) throws IOException{
+	private static BigInteger count(String formula, long bound) throws IOException, InterruptedException{
 //		System.out.println(formula);
 		
-		Nfa dfa = LTLModelCounter.ltl2dfa(formula);
-		String s = LTLModelCounter.automata2RE(dfa);
+//		Nfa dfa = LTLModelCounter.ltl2dfa(formula);
+		Nba nba = LTLModelCounter.ltl2nba(formula);
+		String s = LTLModelCounter.automata2RE(nba);
 //		System.out.println(LTLModelCounter.toABClanguage(s));
 //		System.out.println();
-//		BigInteger count = ABC.count(LTLModelCounter.toABClanguage(s), bound);
-		String [] arr = Discretizer.or(s);
-		BigInteger count = BigInteger.ZERO;
-		for(int i=0; i<arr.length; i++){
-			String abcStr = LTLModelCounter.toABClanguage(arr[i]);
-			if(abcStr=="")
-				abcStr="\"\"";
-//			System.out.println(abcStr);
-			BigInteger or_count = ABC.count(abcStr, bound);
-			count = count.add(or_count);
-		}
+		BigInteger count = ABC.count(LTLModelCounter.toABClanguage(s), bound);
+//		String [] arr = Discretizer.or(s);
+//		BigInteger count = BigInteger.ZERO;
+//		for(int i=0; i<arr.length; i++){
+//			String abcStr = LTLModelCounter.toABClanguage(arr[i]);
+//			if(abcStr=="")
+//				abcStr="\"\"";
+////			System.out.println(abcStr);
+//			BigInteger or_count = ABC.count(abcStr, bound);
+//			count = count.add(or_count);
+//		}
 		return count;
 	}
 	
