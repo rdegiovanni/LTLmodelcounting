@@ -152,7 +152,14 @@ public class LTLModelCounter {
 		
 		//Map labels to ids
 		java.util.Map<String,Integer> labelIDs = new HashMap<>();
-					
+		Iterator<String> lit = ltl_ba.alphabet().iterator();
+		while(lit.hasNext()){
+			String l = lit.next();
+			if(!labelIDs.containsKey(l)){
+				labelIDs.put(l, labelIDs.keySet().size());
+			}
+		}
+		
 		//initial node ids
 		ids.put(in.name(), is.getID());
 			
@@ -181,9 +188,6 @@ public class LTLModelCounter {
 			String l = o._1()._2().toString();
 			
 //			String label = getLabel(l);
-			if(!labelIDs.containsKey(l)){
-				labelIDs.put(l, labelIDs.keySet().size());
-			}
 			int base = 97;//a
 			String label = ""+Character.toChars(base+labelIDs.get(l))[0];
 			
