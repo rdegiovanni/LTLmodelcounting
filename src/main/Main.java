@@ -142,10 +142,10 @@ public class Main {
 	private static BigInteger count(String formula, long bound) throws IOException, InterruptedException{
 //		System.out.println(formula);
 		
-//		Nfa dfa = LTLModelCounter.ltl2dfa(formula);
-		Nba nba = LTLModelCounter.ltl2nba(formula);
+		Nfa dfa = LTLModelCounter.ltl2dfa(formula);
+//		Nba nba = LTLModelCounter.ltl2nba(formula);
 //		Nfa dfa = nba.toDeterministicNfa();
-		String s = LTLModelCounter.automata2RE(nba);
+		String s = LTLModelCounter.automata2RE(dfa);
 //		System.out.println(LTLModelCounter.toABClanguage(s));
 //		System.out.println();
 		BigInteger count = ABC.count(LTLModelCounter.toABClanguage(s), bound);
