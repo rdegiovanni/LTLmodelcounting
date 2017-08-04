@@ -144,7 +144,8 @@ public class Main {
 		
 //		Nfa dfa = LTLModelCounter.ltl2dfa(formula);
 		Nba nba = LTLModelCounter.ltl2nba(formula);
-		String s = LTLModelCounter.automata2RE(nba);
+		Nfa dfa = nba.toDeterministicNfa();
+		String s = LTLModelCounter.automata2RE(dfa);
 //		System.out.println(LTLModelCounter.toABClanguage(s));
 //		System.out.println();
 		BigInteger count = ABC.count(LTLModelCounter.toABClanguage(s), bound);

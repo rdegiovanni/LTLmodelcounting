@@ -124,18 +124,6 @@ public class LTLModelCounter {
 		return nba.toNamedNba();
 	}
 	
-//	//Map labels to ids
-//	static java.util.Map<String,Integer> labelIDs = new HashMap<>();
-//	
-//	static String getLabel(String l){
-//		if(!labelIDs.containsKey(l)){
-//			labelIDs.put(l, labelIDs.keySet().size());
-//		}
-//		int base = 97;//a
-//		String label = ""+Character.toChars(base+labelIDs.get(l))[0];
-//		return label;
-//	}
-			
 	public static String automata2RE(Nfa ltl_ba){
 		
 		FiniteStateAutomaton fsa = new FiniteStateAutomaton();
