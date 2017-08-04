@@ -124,6 +124,8 @@ public class LTLModelCounter {
 		return nba.toNamedNba();
 	}
 	
+
+			
 	public static String automata2RE(Nfa ltl_ba){
 		
 		FiniteStateAutomaton fsa = new FiniteStateAutomaton();
