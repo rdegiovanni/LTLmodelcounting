@@ -54,7 +54,7 @@ public class LTLModelCounter {
 	}
 	
 	private static void runCommand() throws IOException, InterruptedException{
-		Process p = Runtime.getRuntime().exec("./rltlconv.sh @rltlconv.txt --props --formula --apa --nba --min --nfa --dfa");
+		Process p = Runtime.getRuntime().exec("./rltlconv.sh @rltlconv.txt --props --formula --apa --nba --min --nfa --complete --dfa");
 		
 		InputStream in = p.getInputStream();
     	InputStreamReader inread = new InputStreamReader(in);
@@ -135,7 +135,7 @@ public class LTLModelCounter {
 		java.util.Map<String,Integer> ids = new HashMap<>();
 		//get initial node
 		State in = ltl_ba.start().head(); //CUIDADO:que pasa si tenemos varios estados iniciales.
-		System.out.println("initials: "+ltl_ba.start().length());
+
 		//create and set initial state
 		automata.State is = fsa.createState(new Point());
 		fsa.setInitialState(is);
