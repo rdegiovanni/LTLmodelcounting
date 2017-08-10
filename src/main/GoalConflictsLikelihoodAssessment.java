@@ -26,9 +26,9 @@ public class GoalConflictsLikelihoodAssessment {
 		else{
 			String notBC = "";
 			if (BC.length()==1)
-				notBC = "! "+BC;
+				notBC = "(! "+BC+")";
 			else
-				notBC = "! ("+BC+")";//add parenthesis if the formula is not just a proposition
+				notBC = "(! ("+BC+"))";//add parenthesis if the formula is not just a proposition
 			String str = "";
 			boolean first = true;
 			for (int i=1;i<k;i++){
