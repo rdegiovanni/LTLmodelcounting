@@ -24,12 +24,13 @@ public class GoalConflictsLikelihoodAssessment {
 			return BC;
 		}
 		else{
-			String notBC = "";
-			if (BC.length()==1)
-				notBC = "(! "+BC+")";
+			String notBC = "(";
+			if (BC.length()==1 || BC.startsWith("("))
+				notBC += "! "+BC;
 			else
-				notBC = "(! ("+BC+"))";//add parenthesis if the formula is not just a proposition
-			String str = "";
+				notBC += "! ("+BC+")";//add parenthesis if the formula is not just a proposition
+			notBC += ")";
+			String str = "(";
 			boolean first = true;
 			for (int i=1;i<k;i++){
 				if(first)
@@ -41,7 +42,7 @@ public class GoalConflictsLikelihoodAssessment {
 			str += " && X("+BC;
 			for(int i=1; i<k;i++)
 				str += ")";
-			
+			str += ")";
 			return str;
 		}
 	}
