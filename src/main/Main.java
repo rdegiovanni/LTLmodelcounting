@@ -85,7 +85,7 @@ public class Main {
 					else if(deph!=0 && bound-deph>=1)
 						BCatPosK = GoalConflictsLikelihoodAssessment.firstTimeBChold(BC, bound-deph);
 					else
-						BCatPosK = "false";
+						BCatPosK = "FALSE";
 					ltl_str = ltl_str+" && "+BCatPosK;
 				}			
 
