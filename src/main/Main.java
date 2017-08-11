@@ -158,17 +158,17 @@ public class Main {
 		String s = LTLModelCounter.automata2RE(nba);
 //		System.out.println(LTLModelCounter.toABClanguage(s));
 //		System.out.println();
-//		BigInteger count = ABC.count(LTLModelCounter.toABClanguage(s), bound);
-		String [] arr = Discretizer.or(s);
-		BigInteger count = BigInteger.ZERO;
-		for(int i=0; i<arr.length; i++){
-			String abcStr = LTLModelCounter.toABClanguage(arr[i]);
-			if(abcStr=="")
-				abcStr="\"\"";
-//			System.out.println(abcStr);
-			BigInteger or_count = ABC.count(abcStr, bound);
-			count = count.add(or_count);
-		}
+		BigInteger count = ABC.count(LTLModelCounter.toABClanguage(s), bound);
+//		String [] arr = Discretizer.or(s);
+//		BigInteger count = BigInteger.ZERO;
+//		for(int i=0; i<arr.length; i++){
+//			String abcStr = LTLModelCounter.toABClanguage(arr[i]);
+//			if(abcStr=="")
+//				abcStr="\"\"";
+////			System.out.println(abcStr);
+//			BigInteger or_count = ABC.count(abcStr, bound);
+//			count = count.add(or_count);
+//		}
 		return count;
 	}
 	
