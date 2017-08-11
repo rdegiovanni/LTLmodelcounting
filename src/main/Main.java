@@ -23,6 +23,7 @@ public class Main {
 		String alph = null;
 		String outfile = null;
 		int k = 0;
+		int deph = 0;
 		int init = 1;
 		boolean exhaustive = false;
 		
@@ -49,6 +50,9 @@ public class Main {
 			}
 			else if(args[i].startsWith("-out=")){
 				outfile = args[i].replace("-out=", "");
+			}
+			else if(args[i].startsWith("-deph=")){
+				deph = Integer.valueOf(args[i].replace("-deph=", ""));
 			}
 			else{
 				correctUssage();
@@ -90,7 +94,10 @@ public class Main {
 //				System.out.print(bound + ": "+ ltl_str);
 				
 				double iTime = System.currentTimeMillis();
-				BigInteger count = count(ltl_str, bound);
+				long bound_abc = bound;
+				if(deph!=0)
+					bound_abc += deph;
+				BigInteger count = count(ltl_str, bound_abc);
 				double time = getTimeInSecond(iTime,System.currentTimeMillis());
 				System.out.println("Time: " + time); 
 				results.addLast(new SimpleEntry<BigInteger,Double>(count,time));
