@@ -79,7 +79,13 @@ public class Main {
 			while(bound<=k){
 				String ltl_str = "LTL="+formula;
 				if(BC != null){
-					String BCatPosK = GoalConflictsLikelihoodAssessment.firstTimeBChold(BC, bound);
+					String BCatPosK = "";
+					if(deph==0)
+						BCatPosK = GoalConflictsLikelihoodAssessment.firstTimeBChold(BC, bound);
+					else if(deph!=0 && bound-deph>=1)
+						BCatPosK = GoalConflictsLikelihoodAssessment.firstTimeBChold(BC, bound-deph);
+					else
+						BCatPosK = "false";
 					ltl_str = ltl_str+" && "+BCatPosK;
 				}			
 
@@ -94,10 +100,7 @@ public class Main {
 //				System.out.print(bound + ": "+ ltl_str);
 				
 				double iTime = System.currentTimeMillis();
-				long bound_abc = bound;
-				if(deph!=0)
-					bound_abc += deph;
-				BigInteger count = count(ltl_str, bound_abc);
+				BigInteger count = count(ltl_str, bound);
 				double time = getTimeInSecond(iTime,System.currentTimeMillis());
 				System.out.println("Time: " + time); 
 				results.addLast(new SimpleEntry<BigInteger,Double>(count,time));
