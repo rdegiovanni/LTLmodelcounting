@@ -151,7 +151,8 @@ public class LTLModelCounter {
 		fsa.setInitialState(is);
 		
 		//Map labels to ids
-		java.util.Map<String,Integer> labelIDs = new HashMap<>();
+//		java.util.Map<String,Integer> labelIDs = new HashMap<>();
+		
 		Iterator<String> lit = ltl_ba.alphabet().iterator();
 		while(lit.hasNext()){
 			String l = lit.next();
@@ -189,9 +190,10 @@ public class LTLModelCounter {
 			String l = o._1()._2().toString();
 			
 //			String label = getLabel(l);
-			int base = 97;//a
+//			int base = 97;//a
 //			System.out.println("l:" +l.toString());
-			String label = ""+Character.toChars(base+labelIDs.get(l))[0];
+//			String label = ""+Character.toChars(base+labelIDs.get(l))[0];
+			String label = labelIDs.get(l).toString();
 			
 			Iterator<DirectedState> listIt = o._2().iterator();
 			while(listIt.hasNext()){
@@ -242,6 +244,9 @@ public class LTLModelCounter {
 		return FSAToRegularExpressionConverter.convertToRegularExpression(fsa);
 	}
 	
+	//Map labels to ids
+	static java.util.Map<String,Integer> labelIDs = new HashMap<>();
+	
 public static String automata2RE(Nba ltl_ba){
 		
 		FiniteStateAutomaton fsa = new FiniteStateAutomaton();
@@ -254,10 +259,7 @@ public static String automata2RE(Nba ltl_ba){
 		//create and set initial state
 		automata.State is = fsa.createState(new Point());
 		fsa.setInitialState(is);
-		
-		//Map labels to ids
-		java.util.Map<String,Integer> labelIDs = new HashMap<>();
-					
+
 		//initial node ids
 		ids.put(in.name(), is.getID());
 			
@@ -285,13 +287,17 @@ public static String automata2RE(Nba ltl_ba){
 			//get Label
 			String l = o._1()._2().toString();
 			
-//			String label = getLabel(l);
-			if(!labelIDs.containsKey(l)){
-				labelIDs.put(l, labelIDs.keySet().size());
-			}
-			int base = 97;//a
-			String label = ""+Character.toChars(base+labelIDs.get(l))[0];
+			setLabel(l);
+//			if(!labelIDs.containsKey(l)){
+//				labelIDs.put(l, labelIDs.keySet().size());
+//			}
 			
+//			String label = getLabel(l);
+			
+//			int base = 97;//a
+//			String label = l; //""+Character.toChars(base+labelIDs.get(l))[0];
+			String label = ""+Character.toChars(labelIDs.get(l))[0];
+					
 			Iterator<DirectedState> listIt = o._2().iterator();
 			while(listIt.hasNext()){
 				State to = listIt.next().state();
@@ -337,5 +343,25 @@ public static String automata2RE(Nba ltl_ba){
 		return abcStr;
 	}
 	
+	static int base = 48;//start with char 0
+	public static void setLabel(String l) throws RuntimeException{
+		if(labelIDs.containsKey(l)){
+			return;
+		}
+		
+		labelIDs.put(l, base); 
+		
+		//update base
+		if(base==57)
+			base = 65; //jump to A
+		else if (base == 90)
+			base = 97; //jump to a
+		else
+			base++;
+			
+		if(base > 122)
+			throw new RuntimeException("Maximum number of characters reached.");
+
+	}
 	
 }
