@@ -14,10 +14,11 @@ import java.util.LinkedList;
 import de.uni_luebeck.isp.rltlconv.automata.Nba;
 import de.uni_luebeck.isp.rltlconv.automata.Nfa;
 import regular.Discretizer;
+import scala.util.control.Exception;
 
 public class Main {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws RuntimeException, IOException, InterruptedException {
 		String formula = null;
 		String BC = null;
 		String alph = null;
@@ -120,8 +121,7 @@ public class Main {
 				b++;
 			}
 		}
-		catch(Exception e){
-		}
+
 		finally{
 			if(results.isEmpty() || outfile==null)
 				return;
@@ -161,12 +161,20 @@ public class Main {
 //		BigInteger count = ABC.count(LTLModelCounter.toABClanguage(s), bound);
 		String [] arr = Discretizer.or(s);
 		BigInteger count = BigInteger.ZERO;
+		System.out.print(arr.length+" ");
 		for(int i=0; i<arr.length; i++){
 			String abcStr = LTLModelCounter.toABClanguage(arr[i]);
 			if(abcStr=="")
 				abcStr="\"\"";
 //			System.out.println(abcStr);
-			BigInteger or_count = ABC.count(abcStr, bound);
+			System.out.print(".");
+
+			BigInteger or_count = BigInteger.ZERO;
+			try { ABC.count(abcStr, bound); }
+			catch (RuntimeException e) {
+				System.out.println("\nERROR:"+abcStr);
+				throw e;
+			}
 			count = count.add(or_count);
 		}
 		return count;
