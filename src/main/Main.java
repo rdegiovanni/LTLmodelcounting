@@ -198,6 +198,6 @@ public class Main {
 		Nba nba = LTLModelCounter.ltl2nba(form);
 //		Nfa dfa = nba.toDeterministicNfa();
 		String s = LTLModelCounter.automata2RE(nba);
-		return s;
+		return LTLModelCounter.toABClanguage(s);
 	}
 }
