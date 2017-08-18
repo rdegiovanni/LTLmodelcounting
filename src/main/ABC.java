@@ -1,12 +1,13 @@
 package main;
 import java.math.BigInteger;
+import java.util.LinkedList;
 
 import vlab.cs.ucsb.edu.DriverProxy;
 import vlab.cs.ucsb.edu.DriverProxy.Option;
 
 public class ABC {
 
-  public static BigInteger count(String formula, long bound) {
+  public static BigInteger count(LinkedList<String> formulas, long bound) {
 
     DriverProxy abcDriver = new DriverProxy();
     
@@ -15,9 +16,12 @@ public class ABC {
     abcDriver.setOption(Option.REGEX_FLAG,Option.REGEX_FLAG_ANYSTRING);
 
     String constraint = "(set-logic QF_S)\n"
-		+ "(declare-fun x () String)\n"
-        + "(assert (in x /"+formula+"/))\n"
-        + "(assert (= (len x) "+bound+"))\n"
+		+ "(declare-fun x () String)\n";
+    
+    for(String f : formulas){
+    	constraint+= "(assert (in x /"+f+"/))\n";
+    }
+    constraint += "(assert (= (len x) "+bound+"))\n"
         + "(check-sat)\n";
     
 //    System.out.println(constraint);

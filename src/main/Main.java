@@ -19,8 +19,9 @@ import scala.util.control.Exception;
 public class Main {
 
 	public static void main(String[] args) throws RuntimeException, IOException, InterruptedException {
-		String formula = null;
+		String dom = null;
 		String BC = null;
+		LinkedList<String> goals = new LinkedList<>();
 		String alph = null;
 		String outfile = null;
 		int k = 0;
@@ -31,7 +32,10 @@ public class Main {
 		for (int i = 0; i< args.length; i++ ){
 //			System.out.println(args[i]);
 			if(args[i].startsWith("-ltl=")){
-				formula = args[i].replace("-ltl=", "");
+				dom = args[i].replace("-ltl=", "");
+			}
+			if(args[i].startsWith("-g=")){
+				goals.add(args[i].replace("-g=", ""));
 			}
 			else if(args[i].startsWith("-bc=")){
 				BC = args[i].replace("-bc=", "");
@@ -61,7 +65,7 @@ public class Main {
 			}
 		}
 		
-		if(formula==null || k <= 0){
+		if(dom==null || k <= 0){
 			correctUssage();
 			return;
 		}
@@ -77,8 +81,12 @@ public class Main {
 		LinkedList<SimpleEntry<BigInteger, Double>> results = new LinkedList<>();
 		
 		try{ 
+			
 			while(bound<=k){
-				String ltl_str = "LTL="+formula;
+				LinkedList<String> formulas = new LinkedList<>();
+				formulas.add(dom);
+				formulas.addAll(goals);
+				
 				if(BC != null){
 					String BCatPosK = "";
 					if(deph==0)
@@ -87,21 +95,11 @@ public class Main {
 						BCatPosK = GoalConflictsLikelihoodAssessment.firstTimeBChold(BC, bound-deph);
 					else
 						BCatPosK = "FALSE";
-					ltl_str = ltl_str+" && "+BCatPosK;
-				}			
-
-				if(alph != null){
-					ltl_str += ",ALPHABET="+alph;
+					formulas.addFirst(BCatPosK);
 				}
-//				String formula2 = "LTL=G((p && X(p)) -> X(X(! h))) && ! ((h && m)) && X(! ((h && m)) && X(! ((h && m)) && X((h && m)))),ALPHABET=[p,h,m]";
-//				
-////				if(!ltl_str.equals(formula2))
-////					throw new RuntimeException();
-				
-//				System.out.print(bound + ": "+ ltl_str);
-				
+
 				double iTime = System.currentTimeMillis();
-				BigInteger count = count(ltl_str, bound);
+				BigInteger count = count(formulas,alph, bound);
 				double time = getTimeInSecond(iTime,System.currentTimeMillis());
 				System.out.println("Time: " + time); 
 				results.addLast(new SimpleEntry<BigInteger,Double>(count,time));
@@ -149,34 +147,38 @@ public class Main {
 		System.out.println("Use -ltl=dom_goals_ltl [-bc=boundary_condition] -k=bound_for_model_counting");
 	}
 	
-	private static BigInteger count(String formula, long bound) throws IOException, InterruptedException{
-		System.out.println(formula);
+	private static BigInteger count(LinkedList<String> formulas, String alph, long bound) throws IOException, InterruptedException{
 		
-//		Nfa dfa = LTLModelCounter.ltl2dfa(formula);
-		Nba nba = LTLModelCounter.ltl2nba(formula);
-//		Nfa dfa = nba.toDeterministicNfa();
-		String s = LTLModelCounter.automata2RE(nba);
+		LinkedList<String> abcStrs = new LinkedList<>();
+		for(String f: formulas){
+			String abcStr = genABCString(f, alph, bound);
+			abcStrs.add(abcStr);
+		}
+		
+		
+
 //		System.out.println(LTLModelCounter.toABClanguage(s));
 //		System.out.println();
 //		BigInteger count = ABC.count(LTLModelCounter.toABClanguage(s), bound);
-		String [] arr = Discretizer.or(s);
+//		String [] arr = Discretizer.or(s);
 		BigInteger count = BigInteger.ZERO;
-		System.out.print(arr.length+" ");
-		for(int i=0; i<arr.length; i++){
-			String abcStr = LTLModelCounter.toABClanguage(arr[i]);
-			if(abcStr=="")
-				abcStr="\"\"";
-//			System.out.println(abcStr);
-			System.out.print(".");
-
-			BigInteger or_count = BigInteger.ZERO;
-			try { ABC.count(abcStr, bound); }
-			catch (RuntimeException e) {
-				System.out.println("\nERROR:"+abcStr);
-				throw e;
-			}
-			count = count.add(or_count);
-		}
+		count = ABC.count(abcStrs, bound);
+//		System.out.print(arr.length+" ");
+////		for(int i=0; i<arr.length; i++){
+//			String abcStr = LTLModelCounter.toABClanguage(arr[i]);
+//			if(abcStr=="")
+//				abcStr="\"\"";
+////			System.out.println(abcStr);
+//			System.out.print(".");
+//
+//			BigInteger or_count = BigInteger.ZERO;
+//			try { or_count = ABC.count(abcStr, bound); }
+//			catch (RuntimeException e) {
+//				System.out.println("\nERROR:"+abcStr);
+//				throw e;
+//			}
+//			count = count.add(or_count);
+//		}
 		return count;
 	}
 	
@@ -186,5 +188,16 @@ public class Main {
 		//Translate to minutes and seconds
 		double sec = (time/1000);
 		return sec;
+	}
+	
+	public static String genABCString(String ltl, String alph, long bound) throws IOException, InterruptedException{
+		String form = "LTL="+ltl;
+		if(alph!=null && alph!="")
+			form += ",ALPHABET="+alph;
+//		Nfa dfa = LTLModelCounter.ltl2dfa(formula);
+		Nba nba = LTLModelCounter.ltl2nba(form);
+//		Nfa dfa = nba.toDeterministicNfa();
+		String s = LTLModelCounter.automata2RE(nba);
+		return s;
 	}
 }
