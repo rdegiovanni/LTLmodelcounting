@@ -11,13 +11,13 @@ done
 echo "Domain and BC1 and G1 and not G2"
 for K in {1..20}
 do
-	java -Xmx8g -Djava.library.path=/usr/local/lib -cp bin/.:lib/* main.Main -ltl="G((p && X(p)) -> X(X(! h))) && G(h -> X(p)) && ! G(m -> X(! p))" -bc="(h && m)" -alph="[p,m,h]" -k=$K -out=case-studies/minepump/MP-DOM-BC1-G1.txt
+	java -Xmx8g -Djava.library.path=/usr/local/lib -cp bin/.:lib/* main.Main -ltl="G((p && X(p)) -> X(X(! h)))" -g="G(h -> X(p))" -g="! G(m -> X(! p))" -bc="(h && m)" -alph="[p,m,h]" -k=$K -out=case-studies/minepump/MP-DOM-BC1-G1.txt
 done
 
 echo "Domain and BC1 and not G1 and G2"
 for K in {1..20}
 do
-	java -Xmx8g -Djava.library.path=/usr/local/lib -cp bin/.:lib/* main.Main -ltl="G((p && X(p)) -> X(X(! h))) && ! G(h -> X(p)) && G(m -> X(! p))" -bc="(h && m)" -alph="[p,m,h]" -k=$K -out=case-studies/minepump/MP-DOM-BC1-G2.txt
+	java -Xmx8g -Djava.library.path=/usr/local/lib -cp bin/.:lib/* main.Main -ltl="G((p && X(p)) -> X(X(! h)))" -g="! G(h -> X(p))" -g="G(m -> X(! p))" -bc="(h && m)" -alph="[p,m,h]" -k=$K -out=case-studies/minepump/MP-DOM-BC1-G2.txt
 done
 
 echo "Domain and BC2"
@@ -29,11 +29,11 @@ done
 echo "Domain and BC2 and G1 and not G2"
 for K in {1..20}
 do
-	java -Xmx8g -Djava.library.path=/usr/local/lib -cp bin/.:lib/* main.Main -ltl="G((p && X(p)) -> X(X(! h))) && G(h -> X(p)) && ! G(m -> X(! p))" -bc="((h && ! m && p && X(((! h && ! p) || (h && (m || ! p))))))" -alph="[p,m,h]" -deph=1 -k=$K -out=case-studies/minepump/MP-DOM-BC2-G1.txt
+	java -Xmx8g -Djava.library.path=/usr/local/lib -cp bin/.:lib/* main.Main -ltl="G((p && X(p)) -> X(X(! h)))" -g="G(h -> X(p))" -g="! G(m -> X(! p))" -bc="((h && ! m && p && X(((! h && ! p) || (h && (m || ! p))))))" -alph="[p,m,h]" -deph=1 -k=$K -out=case-studies/minepump/MP-DOM-BC2-G1.txt
 done
 
 echo "Domain and BC2 and not G1 and G2"
 for K in {1..20}
 do
-	java -Xmx8g -Djava.library.path=/usr/local/lib -cp bin/.:lib/* main.Main -ltl="G((p && X(p)) -> X(X(! h))) && ! G(h -> X(p)) && G(m -> X(! p))" -bc="((h && ! m && p && X(((! h && ! p) || (h && (m || ! p))))))" -alph="[p,m,h]" -deph=1 -k=$K -out=case-studies/minepump/MP-DOM-BC2-G2.txt
+	java -Xmx8g -Djava.library.path=/usr/local/lib -cp bin/.:lib/* main.Main -ltl="G((p && X(p)) -> X(X(! h)))" -g="! G(h -> X(p))" -g="G(m -> X(! p))" -bc="((h && ! m && p && X(((! h && ! p) || (h && (m || ! p))))))" -alph="[p,m,h]" -deph=1 -k=$K -out=case-studies/minepump/MP-DOM-BC2-G2.txt
 done
