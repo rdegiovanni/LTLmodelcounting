@@ -34,7 +34,7 @@ public class Main {
 			if(args[i].startsWith("-ltl=")){
 				dom = args[i].replace("-ltl=", "");
 			}
-			if(args[i].startsWith("-g=")){
+			else if(args[i].startsWith("-g=")){
 				goals.add(args[i].replace("-g=", ""));
 			}
 			else if(args[i].startsWith("-bc=")){
