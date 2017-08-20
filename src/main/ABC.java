@@ -57,7 +57,7 @@ public class ABC {
       System.out.println("Unsatisfiable");
     }
     
-    abcDriver.dispose(); // release resources
+//    abcDriver.dispose(); // release resources
     return count;
   }
   
@@ -72,7 +72,7 @@ public class ABC {
 	        System.out.println("An error occured during counting, please contact vlab@cs.ucsb.edu");
 	      }
 		  
-		  abcDriver.dispose(); // release resources
+//		  abcDriver.dispose(); // release resources
 	  }
 	  return count;
 	  

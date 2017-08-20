@@ -141,6 +141,10 @@ public class Main {
 		finally{
 			if(results.isEmpty() || outfile==null)
 				return;
+			
+			//dispose ABC 
+			ABC.abcDriver.dispose(); // release resources
+			
 			//write results to file
 			File f = new File(outfile);
 			f.createNewFile();
