@@ -7,9 +7,12 @@ import vlab.cs.ucsb.edu.DriverProxy.Option;
 
 public class ABC {
 
+  public static DriverProxy abcDriver = new DriverProxy();
+  public static boolean result = false;
+  
   public static BigInteger count(LinkedList<String> formulas, long bound) {
 
-    DriverProxy abcDriver = new DriverProxy();
+    
     
 //    abcDriver.setOption(Option.ENABLE_IMPLICATIONS);
 //    abcDriver.setOption(Option.USE_SIGNED_INTEGERS);
@@ -21,12 +24,12 @@ public class ABC {
     for(String f : formulas){
     	constraint+= "(assert (in x /"+f+"/))\n";
     }
-    constraint += "(assert (= (len x) "+bound+"))\n"
-        + "(check-sat)\n";
+//    constraint += "(assert (= (len x) "+bound+"))\n";
+    constraint += "(check-sat)\n";
     
     System.out.println(constraint);
 //    System.out.println(bound);
-    boolean result = abcDriver.isSatisfiable(constraint);
+    result = abcDriver.isSatisfiable(constraint);
     BigInteger count = BigInteger.ZERO;
     
     if (result) {
@@ -56,5 +59,22 @@ public class ABC {
     
     abcDriver.dispose(); // release resources
     return count;
+  }
+  
+  public static BigInteger count(long bound) {
+	  BigInteger count = BigInteger.ZERO;
+	  System.out.println("k: "+bound);
+	  if(result){
+		  count = abcDriver.countVariable("x",bound);	      
+		  if (count != null) {
+	        System.out.println("Number of solutions: " + count.toString());
+	      } else {
+	        System.out.println("An error occured during counting, please contact vlab@cs.ucsb.edu");
+	      }
+		  
+		  abcDriver.dispose(); // release resources
+	  }
+	  return count;
+	  
   }
 }

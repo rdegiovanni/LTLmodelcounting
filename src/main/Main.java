@@ -82,26 +82,44 @@ public class Main {
 		
 		try{ 
 			
+			boolean first = true;
+			
 			while(bound<=k){
-				LinkedList<String> formulas = new LinkedList<>();
-				formulas.add(dom);
-				formulas.addAll(goals);
-				
-				if(BC != null){
-					String BCatPosK = "";
-					if(deph==0)
-						BCatPosK = GoalConflictsLikelihoodAssessment.firstTimeBChold(BC, bound);
-					else if(deph!=0 && bound-deph>=1)
-						BCatPosK = GoalConflictsLikelihoodAssessment.firstTimeBChold(BC, bound-deph);
-					else
-						BCatPosK = "FALSE";
-					formulas.addFirst(BCatPosK);
+				BigInteger count = BigInteger.ZERO;
+				double time = 0;
+				if (first){
+					LinkedList<String> formulas = new LinkedList<>();
+					formulas.add(dom);
+					formulas.addAll(goals);
+					
+//					if(BC != null){
+//						String BCatPosK = "";
+//						if(deph==0)
+//							BCatPosK = GoalConflictsLikelihoodAssessment.firstTimeBChold(BC, bound);
+//						else if(deph!=0 && bound-deph>=1)
+//							BCatPosK = GoalConflictsLikelihoodAssessment.firstTimeBChold(BC, bound-deph);
+//						else
+//							BCatPosK = "FALSE";
+//						formulas.addFirst(BCatPosK);						
+//					}
+	
+					double iTime = System.currentTimeMillis();
+					count = count(formulas, BC, alph, bound);
+					time = getTimeInSecond(iTime,System.currentTimeMillis());
+					System.out.println("Time: " + time); 
+					first = false;
 				}
-
-				double iTime = System.currentTimeMillis();
-				BigInteger count = count(formulas,alph, bound);
-				double time = getTimeInSecond(iTime,System.currentTimeMillis());
-				System.out.println("Time: " + time); 
+				else{
+					double iTime = System.currentTimeMillis();
+					if(ABC.result)
+						count = ABC.count(bound);
+					else{
+						System.out.println("Unsatisfiable constraint");
+						break;
+					}
+					time = getTimeInSecond(iTime,System.currentTimeMillis());
+					System.out.println("Time: " + time); 
+				}
 				results.addLast(new SimpleEntry<BigInteger,Double>(count,time));
 				bound++;
 			}
@@ -147,15 +165,23 @@ public class Main {
 		System.out.println("Use -ltl=dom_goals_ltl [-bc=boundary_condition] -k=bound_for_model_counting");
 	}
 	
-	private static BigInteger count(LinkedList<String> formulas, String alph, long bound) throws IOException, InterruptedException{
+	private static BigInteger count(LinkedList<String> formulas, String BC, String alph, long bound) throws IOException, InterruptedException{
 		
 		LinkedList<String> abcStrs = new LinkedList<>();
 		for(String f: formulas){
-			String abcStr = genABCString(f, alph, bound);
+			String abcStr = genABCString(f, alph);
 			abcStrs.add(abcStr);
 		}
 		
-		
+		if(BC != null){
+			String s = genABCString(BC, alph);	
+			String [] arr = Discretizer.cat(s);
+			String abcStr = "";
+			for(int i=0; i < arr.length-1; i++){
+				abcStr += arr[i];
+			}
+			abcStrs.add(abcStr);
+		}
 
 //		System.out.println(LTLModelCounter.toABClanguage(s));
 //		System.out.println();
@@ -190,7 +216,7 @@ public class Main {
 		return sec;
 	}
 	
-	public static String genABCString(String ltl, String alph, long bound) throws IOException, InterruptedException{
+	public static String genABCString(String ltl, String alph) throws IOException, InterruptedException{
 		String form = "LTL="+ltl;
 		if(alph!=null && alph!="")
 			form += ",ALPHABET="+alph;
