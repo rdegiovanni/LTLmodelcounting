@@ -193,8 +193,8 @@ public class Main {
 //		String [] arr = Discretizer.or(s);
 		BigInteger count = BigInteger.ZERO;
 		if(alph.split(",").length>5){
-			int i = (LTLModelCounter.state - 97) + 1;
-			count = ABC.count(abcStrs, bound*i);
+//			int i = (LTLModelCounter.state - 97) + 1;
+			count = ABC.count(abcStrs, bound*2);
 		}
 		else
 			count = ABC.count(abcStrs, bound);
