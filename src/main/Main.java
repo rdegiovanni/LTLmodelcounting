@@ -111,8 +111,12 @@ public class Main {
 				}
 				else{
 					double iTime = System.currentTimeMillis();
-					if(ABC.result)
-						count = ABC.count(bound);
+					if(ABC.result){
+						if(LTLModelCounter.encoded_alphabet)
+							count = ABC.count(bound*2);//each state is characterised by 2 characters
+						else
+							count = ABC.count(bound);
+					}
 					else{
 						System.out.println("Unsatisfiable constraint");
 						break;
@@ -192,10 +196,8 @@ public class Main {
 //		BigInteger count = ABC.count(LTLModelCounter.toABClanguage(s), bound);
 //		String [] arr = Discretizer.or(s);
 		BigInteger count = BigInteger.ZERO;
-		if(alph.split(",").length>5){
-//			int i = (LTLModelCounter.state - 97) + 1;
+		if(LTLModelCounter.encoded_alphabet)
 			count = ABC.count(abcStrs, bound*2);
-		}
 		else
 			count = ABC.count(abcStrs, bound);
 //		System.out.print(arr.length+" ");
