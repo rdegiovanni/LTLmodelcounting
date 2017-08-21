@@ -158,7 +158,7 @@ public class LTLModelCounter {
 			String l = lit.next();
 //			System.out.println(l);
 			if(!labelIDs.containsKey(l)){
-				labelIDs.put("\""+l+"\"", labelIDs.keySet().size());
+				labelIDs.put("\""+l+"\"", ""+labelIDs.keySet().size());
 			}
 		}
 		
@@ -245,8 +245,8 @@ public class LTLModelCounter {
 	}
 	
 	//Map labels to ids
-	static java.util.Map<String,Integer> labelIDs = new HashMap<>();
-	
+	static java.util.Map<String,String> labelIDs = new HashMap<>();
+	public static boolean encoded_alphabet = false;
 public static String automata2RE(Nba ltl_ba){
 		
 		FiniteStateAutomaton fsa = new FiniteStateAutomaton();
@@ -287,7 +287,10 @@ public static String automata2RE(Nba ltl_ba){
 			//get Label
 			String l = o._1()._2().toString();
 			
-			setLabel(l);
+			if(!encoded_alphabet)
+				setLabel(l);
+			else
+				setLabelEncoded(l);
 //			if(!labelIDs.containsKey(l)){
 //				labelIDs.put(l, labelIDs.keySet().size());
 //			}
@@ -296,8 +299,9 @@ public static String automata2RE(Nba ltl_ba){
 			
 //			int base = 97;//a
 //			String label = l; //""+Character.toChars(base+labelIDs.get(l))[0];
-			String label = ""+Character.toChars(labelIDs.get(l))[0];
-					
+//			String label = ""+Character.toChars(labelIDs.get(l))[0];
+			String label = labelIDs.get(l);
+			
 			Iterator<DirectedState> listIt = o._2().iterator();
 			while(listIt.hasNext()){
 				State to = listIt.next().state();
@@ -349,7 +353,7 @@ public static String automata2RE(Nba ltl_ba){
 			return;
 		}
 		
-		labelIDs.put(l, base); 
+		labelIDs.put(l, ""+Character.toChars(base)[0]); 
 		
 		//update base
 		if(base==57)
@@ -360,6 +364,34 @@ public static String automata2RE(Nba ltl_ba){
 			base++;
 			
 		if(base > 122)
+			throw new RuntimeException("Maximum number of characters reached.");
+
+	}
+	
+	
+	public static int state = 97;//start with char a
+	public static void setLabelEncoded(String l) throws RuntimeException{
+		if(labelIDs.containsKey(l)){
+			return;
+		}
+		
+		String label = ""+Character.toChars(state)[0]+Character.toChars(base)[0];
+		labelIDs.put(l, label); 
+		
+		//update base
+		if(base==57)
+			base = 65; //jump to A
+		else if (base == 90)
+			base = 97; //jump to a
+		else
+			base++;
+		
+		if(base > 122){
+			state++;
+			base = 48;
+		}
+		
+		if(state > 122)
 			throw new RuntimeException("Maximum number of characters reached.");
 
 	}

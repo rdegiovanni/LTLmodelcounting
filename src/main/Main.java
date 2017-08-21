@@ -166,7 +166,7 @@ public class Main {
 	}
 	
 	private static void correctUssage(){
-		System.out.println("Use -ltl=dom_goals_ltl [-bc=boundary_condition] -k=bound_for_model_counting");
+		System.out.println("Use -ltl=dom [-g=goal -bc=boundary_condition -i=initial_bound -all:1..k] -alph=[alphabet] -k=bound_for_model_counting");
 	}
 	
 	private static BigInteger count(LinkedList<String> formulas, String BC, String alph, long bound) throws IOException, InterruptedException{
@@ -192,7 +192,12 @@ public class Main {
 //		BigInteger count = ABC.count(LTLModelCounter.toABClanguage(s), bound);
 //		String [] arr = Discretizer.or(s);
 		BigInteger count = BigInteger.ZERO;
-		count = ABC.count(abcStrs, bound);
+		if(alph.split(",").length>5){
+			int i = (LTLModelCounter.state - 97) + 1;
+			count = ABC.count(abcStrs, bound*i);
+		}
+		else
+			count = ABC.count(abcStrs, bound);
 //		System.out.print(arr.length+" ");
 ////		for(int i=0; i<arr.length; i++){
 //			String abcStr = LTLModelCounter.toABClanguage(arr[i]);
@@ -225,6 +230,8 @@ public class Main {
 		if(alph!=null && alph!="")
 			form += ",ALPHABET="+alph;
 //		Nfa dfa = LTLModelCounter.ltl2dfa(formula);
+		if(alph.split(",").length>5)
+			LTLModelCounter.encoded_alphabet = true;
 		Nba nba = LTLModelCounter.ltl2nba(form);
 //		Nfa dfa = nba.toDeterministicNfa();
 		String s = LTLModelCounter.automata2RE(nba);
