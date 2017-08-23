@@ -27,7 +27,7 @@ public class ABC {
 //    constraint += "(assert (= (len x) "+bound+"))\n";
     constraint += "(check-sat)\n";
     
-    System.out.println(constraint);
+//    System.out.println(constraint);
 //    System.out.println(bound);
     result = abcDriver.isSatisfiable(constraint);
     BigInteger count = BigInteger.ZERO;
