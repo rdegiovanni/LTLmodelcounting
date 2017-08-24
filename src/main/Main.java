@@ -20,7 +20,7 @@ public class Main {
 
 	public static void main(String[] args) throws RuntimeException, IOException, InterruptedException {
 		String dom = null;
-		String BC = null;
+		LinkedList<String> BCs = new LinkedList<>();
 		LinkedList<String> goals = new LinkedList<>();
 		String alph = null;
 		String outfile = null;
@@ -38,7 +38,7 @@ public class Main {
 				goals.add(args[i].replace("-g=", ""));
 			}
 			else if(args[i].startsWith("-bc=")){
-				BC = args[i].replace("-bc=", "");
+				BCs.add(args[i].replace("-bc=", ""));
 			}
 			else if(args[i].startsWith("-alph=")){
 				alph = args[i].replace("-alph=", "");
@@ -104,7 +104,7 @@ public class Main {
 //					}
 	
 					double iTime = System.currentTimeMillis();
-					count = count(formulas, BC, alph, bound);
+					count = count(formulas, BCs, alph, bound);
 					time = getTimeInSecond(iTime,System.currentTimeMillis());
 					System.out.println("Time: " + time); 
 					first = false;
@@ -173,7 +173,7 @@ public class Main {
 		System.out.println("Use -ltl=dom [-g=goal -bc=boundary_condition -i=initial_bound -all:1..k] -alph=[alphabet] -k=bound_for_model_counting");
 	}
 	
-	private static BigInteger count(LinkedList<String> formulas, String BC, String alph, long bound) throws IOException, InterruptedException{
+	private static BigInteger count(LinkedList<String> formulas, LinkedList<String> BCs, String alph, long bound) throws IOException, InterruptedException{
 		
 		LinkedList<String> abcStrs = new LinkedList<>();
 		for(String f: formulas){
@@ -181,14 +181,16 @@ public class Main {
 			abcStrs.add(abcStr);
 		}
 		
-		if(BC != null){
-			String s = genABCString(BC, alph);	
-			String [] arr = Discretizer.cat(s);
-			String abcStr = "";
-			for(int i=0; i < arr.length-1; i++){
-				abcStr += arr[i];
+		if(!BCs.isEmpty()){
+			for(String BC : BCs){
+				String s = genABCString(BC, alph);	
+				String [] arr = Discretizer.cat(s);
+				String abcStr = "";
+				for(int i=0; i < arr.length-1; i++){
+					abcStr += arr[i];
+				}
+				abcStrs.add(abcStr);
 			}
-			abcStrs.add(abcStr);
 		}
 
 //		System.out.println(LTLModelCounter.toABClanguage(s));
