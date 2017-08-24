@@ -4,4 +4,4 @@
 ./case-studies/telephone/telephone.sh
 ./case-studies/railroad/railroad.sh
 ./case-studies/tcp/tcp.sh
-#./case-studies/las/las.sh
+./case-studies/las/las.sh
