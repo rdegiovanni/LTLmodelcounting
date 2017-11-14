@@ -1,6 +1,7 @@
 DOM:
 --Level3: DomProp Pair Found IIf Pair Elected
-G(b <-> (h && i && j))
+G(b -> (h && i && j))
+G((h && i && j) -> b)
 
 GOALS:
 --Level 1: Goal Achieve [Adequate Pair Found When Ride Request Encoded]
