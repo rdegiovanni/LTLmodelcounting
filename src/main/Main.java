@@ -66,6 +66,9 @@ public class Main {
 			else if(args[i].startsWith("-deph=")){
 				deph = Integer.valueOf(args[i].replace("-deph=", ""));
 			}
+			else if(args[i].startsWith("-noprops")){
+				LTLModelCounter.props = false;
+			}
 			else{
 				correctUssage();
 				return;
@@ -242,7 +245,7 @@ public class Main {
 		if(alph!=null && alph!="")
 			form += ",ALPHABET="+alph;
 //		Nfa dfa = LTLModelCounter.ltl2dfa(formula);
-		if(alph.split(",").length>5)
+		if(LTLModelCounter.props && alph.split(",").length>5)
 			LTLModelCounter.encoded_alphabet = true;
 		Nba nba = LTLModelCounter.ltl2nba(form);
 //		Nfa dfa = nba.toDeterministicNfa();

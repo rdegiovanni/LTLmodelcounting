@@ -99,6 +99,8 @@ public class LTLModelCounter {
 			if (os!=null) os.close();
    		}
 	}
+	
+	public static boolean props = true;
 	public static Nfa ltl2dfa(String formula) throws IOException, InterruptedException{
 //		ConversionVal[] conv = {Conversion.PROPS(), Conversion.FORMULA(),Conversion.APA(),Conversion.NBA(), Conversion.MIN(), Conversion.NFA(), Conversion.DFA()};
 //		Object res = RltlConv.convert(formula, conv);
@@ -107,9 +109,11 @@ public class LTLModelCounter {
 		String fname = "rltlconv.txt";
 		
 		writeFile(fname,formula);
-		
-		runCommand("./rltlconv.sh @rltlconv.txt --formula --props --apa --nba --min --nfa --dfa");
-		
+		if (props)
+			runCommand("./rltlconv.sh @rltlconv.txt --formula --props --apa --nba --min --nfa --dfa");
+		else
+			runCommand("./rltlconv.sh @rltlconv.txt --formula --apa --nba --min --nfa --dfa");
+			
 		Object res = Main.load("@rltlconv-out.txt");
 		
 		Nfa fsa = (Nfa) RltlConv.convert(res, Conversion.DFA());
@@ -127,8 +131,10 @@ public class LTLModelCounter {
 		
 		writeFile(fname,formula);
 		
-		runCommand("./rltlconv.sh @rltlconv.txt --formula --props --nba --min");
-		
+		if (props)
+			runCommand("./rltlconv.sh @rltlconv.txt --formula --props --nba --min");
+		else
+			runCommand("./rltlconv.sh @rltlconv.txt --formula --nba --min");
 		Object res = Main.load("@rltlconv-out.txt");
 		
 		Nba nba = (Nba) RltlConv.convert(res, Conversion.NBA());
