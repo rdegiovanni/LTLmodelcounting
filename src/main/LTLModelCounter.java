@@ -293,7 +293,7 @@ public static String automata2RE(Nba ltl_ba){
 			//get Label
 			String l = o._1()._2().toString();
 			
-			if(encoded_alphabet!=-1)
+			if(encoded_alphabet==-1)
 				setLabel(l);
 			else
 				setLabelEncoded(l);

@@ -210,13 +210,14 @@ public class Main {
 //		System.out.println();
 //		BigInteger count = ABC.count(LTLModelCounter.toABClanguage(s), bound);
 //		String [] arr = Discretizer.or(s);
+		System.out.println("Model Counting...");
 		BigInteger count = BigInteger.ZERO;
-		if(LTLModelCounter.encoded_alphabet==1)
-			count = ABC.count(bound*2);//each state is characterised by 2 characters
-		else if(LTLModelCounter.encoded_alphabet==2)
-			count = ABC.count(bound*3);//each state is characterised by 3 characters
+		if(LTLModelCounter.encoded_alphabet==0)
+			count = ABC.count(abcStrs,bound*2);//each state is characterised by 2 characters
+		else if(LTLModelCounter.encoded_alphabet==1)
+			count = ABC.count(abcStrs,bound*3);//each state is characterised by 3 characters
 		else
-			count = ABC.count(bound);
+			count = ABC.count(abcStrs,bound);
 //		System.out.print(arr.length+" ");
 ////		for(int i=0; i<arr.length; i++){
 //			String abcStr = LTLModelCounter.toABClanguage(arr[i]);
@@ -253,8 +254,10 @@ public class Main {
 			LTLModelCounter.encoded_alphabet = 0;
 		else if(LTLModelCounter.props && alph.split(",").length>=12)
 			LTLModelCounter.encoded_alphabet = 1;
+		System.out.println("Translating from LTL to NBA...");
 		Nba nba = LTLModelCounter.ltl2nba(form);
 //		Nfa dfa = nba.toDeterministicNfa();
+		System.out.println("Generating RE...");
 		String s = LTLModelCounter.automata2RE(nba);
 		return LTLModelCounter.toABClanguage(s);
 	}
