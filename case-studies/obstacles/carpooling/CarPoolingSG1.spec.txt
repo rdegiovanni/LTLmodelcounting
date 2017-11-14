@@ -1,0 +1,40 @@
+DOM:
+--Level3: DomProp Pair Found IIf Pair Elected
+G(b <-> (h && i && j))
+
+GOALS:
+--Level 1: Goal Achieve [Adequate Pair Found When Ride Request Encoded]
+G (a -> F (b && c))
+
+--Level 2: Goal Maintain[Ride Offer Accurate]
+G (d)
+
+--Level 2: Goal Achieve [Adequate Pair Found Based On Accurate Offer]
+G ((a && d) -> F (b && c))
+
+--Level 3: Goal Achieve [Matching Suggestion Selected]
+G((a && d && e) -> F ( (f && h && g && i && k && c)))
+
+--Level 3: Goal Achieve [Suggestion Elected Based On Selection]
+G ((g && f) -> F (g && f && j))
+
+--Level 4: Goal Achieve [Suggestion Selected]
+G((a && d && e) -> F (f && h && g && i && k))
+
+--Level 4: Goal Maintain [Suggestion Matching]
+G((h && i) -> c)
+
+--Level 5: Goal Achieve [Suggestion Proposed]
+G((a && d && e) -> F(l && m && h && i &&  k))
+
+--Level 5: Goal Achieve [Suggestions Selected When Proposed]
+G((l && m && h && i && k) -> F (f && g &&  l && m))
+
+--Level 6: Goal Achieve [Suggestions Selected By Passenger]
+G((l && h && e) -> F (f && l))
+
+--Level 6: Goal Achieve [Suggestions Selected By Driver]
+G((m && i && k) -> F (g && m))
+
+ALPH:
+[a,b,c,d,e,f,g,h,i,j,k,l,m]
