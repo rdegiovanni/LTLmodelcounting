@@ -292,9 +292,9 @@ public class Main {
 		String alphStr = "";
 		for (String s : alph)
 			alphStr += s;
-		if (!alphStr.startsWith("["))
+		if (!alphStr.contains("["))
 			alphStr = "["+alphStr;
-		if (!alphStr.endsWith("]"))
+		if (!alphStr.contains("]"))
 			alphStr += "]";
 		return alphStr;
 	}
