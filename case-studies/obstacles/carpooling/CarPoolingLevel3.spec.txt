@@ -1,0 +1,24 @@
+Goals:
+--Level 3: Goal Achieve [Matching Suggestion Selected]
+G((a && b && c) -> F ( (d && e && f && g && h && i)))
+
+--Level 4: Goal Achieve [Suggestion Selected]
+G((a && b && c) -> F (d && e && f && g && h))
+
+--Level 4: Goal Maintain [Suggestion Matching]
+G((e && g) -> i)
+
+--Level 5: Goal Achieve [Suggestion Proposed]
+G((a && b && c) -> F(j && k && e && g &&  h))
+
+--Level 5: Goal Achieve [Suggestions Selected When Proposed]
+G((j && k && e && g && h) -> F (d && f &&  j && k))
+
+--Level 6: Goal Achieve [Suggestions Selected By Passenger]
+G((j && e && c) -> F (d && j))
+
+--Level 6: Goal Achieve [Suggestions Selected By Driver]
+G((k && g && h) -> F (f && k))
+
+ALPH:
+[a,b,c,d,e,f,g,h,i,j,k]
