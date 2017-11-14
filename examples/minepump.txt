@@ -1,0 +1,9 @@
+DOM:
+G((p && X(p)) -> X(X(! h)))
+BC:
+F (h && m) 
+ALPH
+[p,m,h] 
+Goals:
+! G(h -> X(p))
+G(m -> X(! p))
