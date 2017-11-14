@@ -123,8 +123,10 @@ public class Main {
 				else{
 					double iTime = System.currentTimeMillis();
 					if(ABC.result){
-						if(LTLModelCounter.encoded_alphabet)
+						if(LTLModelCounter.encoded_alphabet==1)
 							count = ABC.count(bound*2);//each state is characterised by 2 characters
+						else if(LTLModelCounter.encoded_alphabet==2)
+							count = ABC.count(bound*3);//each state is characterised by 3 characters
 						else
 							count = ABC.count(bound);
 					}
@@ -209,10 +211,12 @@ public class Main {
 //		BigInteger count = ABC.count(LTLModelCounter.toABClanguage(s), bound);
 //		String [] arr = Discretizer.or(s);
 		BigInteger count = BigInteger.ZERO;
-		if(LTLModelCounter.encoded_alphabet)
-			count = ABC.count(abcStrs, bound*2);
+		if(LTLModelCounter.encoded_alphabet==1)
+			count = ABC.count(bound*2);//each state is characterised by 2 characters
+		else if(LTLModelCounter.encoded_alphabet==2)
+			count = ABC.count(bound*3);//each state is characterised by 3 characters
 		else
-			count = ABC.count(abcStrs, bound);
+			count = ABC.count(bound);
 //		System.out.print(arr.length+" ");
 ////		for(int i=0; i<arr.length; i++){
 //			String abcStr = LTLModelCounter.toABClanguage(arr[i]);
@@ -245,8 +249,10 @@ public class Main {
 		if(alph!=null && alph!="")
 			form += ",ALPHABET="+alph;
 //		Nfa dfa = LTLModelCounter.ltl2dfa(formula);
-		if(LTLModelCounter.props && alph.split(",").length>5)
-			LTLModelCounter.encoded_alphabet = true;
+		if(LTLModelCounter.props && alph.split(",").length>5 && alph.split(",").length<12)
+			LTLModelCounter.encoded_alphabet = 0;
+		else if(LTLModelCounter.props && alph.split(",").length>=12)
+			LTLModelCounter.encoded_alphabet = 1;
 		Nba nba = LTLModelCounter.ltl2nba(form);
 //		Nfa dfa = nba.toDeterministicNfa();
 		String s = LTLModelCounter.automata2RE(nba);
@@ -261,24 +267,27 @@ public class Main {
 		    String line = br.readLine();
 		    FormulaType f = FormulaType.Dom;
 		    while (line != null) {
-		    	if (line.toUpperCase().startsWith("DOM"))
-		    		f = FormulaType.Dom;
-		    	else if (line.toUpperCase().startsWith("BC"))
-		    		f = FormulaType.BC;
-		    	else if (line.toUpperCase().startsWith("GOAL"))
-		    		f = FormulaType.Goal;
-		    	else if (line.toUpperCase().startsWith("ALPH"))
-		    		f = FormulaType.ALPH;
-		    	else if (!line.trim().isEmpty()){
-		    		//insert the formula in the corresponding section
-		    		if (f==FormulaType.Dom)
-		    			dom.add(line);
-		    		else if (f==FormulaType.BC)
-		    			BCs.add(line);
-		    		else if (f==FormulaType.Goal)
-		    			goals.add(line);
-		    		else 
-		    			alph.add(line);
+		    	
+		    	if (!line.startsWith("--")){
+			    	if (line.toUpperCase().startsWith("DOM"))
+			    		f = FormulaType.Dom;
+			    	else if (line.toUpperCase().startsWith("BC"))
+			    		f = FormulaType.BC;
+			    	else if (line.toUpperCase().startsWith("GOAL"))
+			    		f = FormulaType.Goal;
+			    	else if (line.toUpperCase().startsWith("ALPH"))
+			    		f = FormulaType.ALPH;
+			    	else if (!line.trim().isEmpty()){
+			    		//insert the formula in the corresponding section
+			    		if (f==FormulaType.Dom)
+			    			dom.add(line);
+			    		else if (f==FormulaType.BC)
+			    			BCs.add(line);
+			    		else if (f==FormulaType.Goal)
+			    			goals.add(line);
+			    		else 
+			    			alph.add(line);
+			    	}
 		    	}
 //		    	
 //		        sb.append(line);

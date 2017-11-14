@@ -252,7 +252,7 @@ public class LTLModelCounter {
 	
 	//Map labels to ids
 	static java.util.Map<String,String> labelIDs = new HashMap<>();
-	public static boolean encoded_alphabet = false;
+	
 public static String automata2RE(Nba ltl_ba){
 		
 		FiniteStateAutomaton fsa = new FiniteStateAutomaton();
@@ -293,7 +293,7 @@ public static String automata2RE(Nba ltl_ba){
 			//get Label
 			String l = o._1()._2().toString();
 			
-			if(!encoded_alphabet)
+			if(encoded_alphabet!=-1)
 				setLabel(l);
 			else
 				setLabelEncoded(l);
@@ -374,14 +374,18 @@ public static String automata2RE(Nba ltl_ba){
 
 	}
 	
+	public static int encoded_alphabet = -1;
+
 	
-	public static int state = 97;//start with char a
+	public static int[]state = {48,48};//start with char 0
 	public static void setLabelEncoded(String l) throws RuntimeException{
 		if(labelIDs.containsKey(l)){
 			return;
 		}
-		
-		String label = ""+Character.toChars(state)[0]+Character.toChars(base)[0];
+		String label = ""+Character.toChars(state[0])[0];
+		if(LTLModelCounter.encoded_alphabet==2)
+			label += Character.toChars(state[1])[0];
+		label += Character.toChars(base)[0];
 		labelIDs.put(l, label); 
 		
 		//update base
@@ -393,13 +397,31 @@ public static String automata2RE(Nba ltl_ba){
 			base++;
 		
 		if(base > 122){
-			state++;
 			base = 48;
-		}
 		
-		if(state > 122)
-			throw new RuntimeException("Maximum number of characters reached.");
-
+			//update state[0]
+			if(state[0]==57)
+				state[0] = 65; //jump to A
+			else if (state[0] == 90)
+				state[0] = 97; //jump to a
+			else
+				state[0]++;
+			
+			if(state[0] > 122){
+				state[0] = 48;
+			
+				//update state[1]
+				if(state[1]==57)
+					state[1] = 65; //jump to A
+				else if (state[1] == 90)
+					state[1] = 97; //jump to a
+				else
+					state[1]++;
+				
+				if(state[1] > 122)
+					throw new RuntimeException("Maximum number of characters reached.");
+			}
+		}
 	}
 	
 }
