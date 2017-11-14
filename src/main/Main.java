@@ -1,8 +1,11 @@
 package main;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -19,10 +22,10 @@ import scala.util.control.Exception;
 public class Main {
 
 	public static void main(String[] args) throws RuntimeException, IOException, InterruptedException {
-		String dom = null;
+		LinkedList<String> dom = new LinkedList<>();
 		LinkedList<String> BCs = new LinkedList<>();
 		LinkedList<String> goals = new LinkedList<>();
-		String alph = null;
+		LinkedList<String> alph = new LinkedList<>();
 		String outfile = null;
 		int k = 0;
 		int deph = 0;
@@ -32,7 +35,7 @@ public class Main {
 		for (int i = 0; i< args.length; i++ ){
 //			System.out.println(args[i]);
 			if(args[i].startsWith("-ltl=")){
-				dom = args[i].replace("-ltl=", "");
+				dom.add(args[i].replace("-ltl=", ""));
 			}
 			else if(args[i].startsWith("-g=")){
 				goals.add(args[i].replace("-g=", ""));
@@ -40,8 +43,12 @@ public class Main {
 			else if(args[i].startsWith("-bc=")){
 				BCs.add(args[i].replace("-bc=", ""));
 			}
+			else if(args[i].startsWith("-f=")){
+				String fname = args[i].replace("-f=", "");
+				readFromFile(fname, dom,goals,BCs,alph);
+			}
 			else if(args[i].startsWith("-alph=")){
-				alph = args[i].replace("-alph=", "");
+				alph.add(args[i].replace("-alph=", ""));
 //				System.out.println(alph);
 			}
 			else if(args[i].startsWith("-k=")){
@@ -89,7 +96,7 @@ public class Main {
 				double time = 0;
 				if (first){
 					LinkedList<String> formulas = new LinkedList<>();
-					formulas.add(dom);
+					formulas.addAll(dom);
 					formulas.addAll(goals);
 					
 //					if(BC != null){
@@ -104,7 +111,8 @@ public class Main {
 //					}
 	
 					double iTime = System.currentTimeMillis();
-					count = count(formulas, BCs, alph, bound);
+					String alphStr = genAlph(alph);
+					count = count(formulas, BCs, alphStr, bound);
 					time = getTimeInSecond(iTime,System.currentTimeMillis());
 					System.out.println("Time: " + time); 
 					first = false;
@@ -170,7 +178,7 @@ public class Main {
 	}
 	
 	private static void correctUssage(){
-		System.out.println("Use -ltl=dom [-g=goal -bc=boundary_condition -i=initial_bound -all:1..k] -alph=[alphabet] -k=bound_for_model_counting");
+		System.out.println("Use -ltl=dom [-g=goal -bc=boundary_condition -f=formulas_file] [-i=initial_bound -all:1..k] -alph=[alphabet] -k=bound_for_model_counting");
 	}
 	
 	private static BigInteger count(LinkedList<String> formulas, LinkedList<String> BCs, String alph, long bound) throws IOException, InterruptedException{
@@ -240,5 +248,54 @@ public class Main {
 //		Nfa dfa = nba.toDeterministicNfa();
 		String s = LTLModelCounter.automata2RE(nba);
 		return LTLModelCounter.toABClanguage(s);
+	}
+	
+	enum FormulaType {Goal, Dom, BC, ALPH};
+	public static void readFromFile (String fname, LinkedList<String> dom , LinkedList<String> BCs, LinkedList<String> goals, LinkedList<String> alph) throws IOException{
+		BufferedReader br = new BufferedReader(new FileReader(fname));
+		try {
+//		    StringBuilder sb = new StringBuilder();
+		    String line = br.readLine();
+		    FormulaType f = FormulaType.Dom;
+		    while (line != null) {
+		    	if (line.toUpperCase().startsWith("DOM"))
+		    		f = FormulaType.Dom;
+		    	else if (line.toUpperCase().startsWith("BC"))
+		    		f = FormulaType.BC;
+		    	else if (line.toUpperCase().startsWith("GOAL"))
+		    		f = FormulaType.Goal;
+		    	else if (line.toUpperCase().startsWith("ALPH"))
+		    		f = FormulaType.ALPH;
+		    	else if (!line.trim().isEmpty()){
+		    		//insert the formula in the corresponding section
+		    		if (f==FormulaType.Dom)
+		    			dom.add(line);
+		    		else if (f==FormulaType.BC)
+		    			BCs.add(line);
+		    		else if (f==FormulaType.Goal)
+		    			goals.add(line);
+		    		else 
+		    			alph.add(line);
+		    	}
+//		    	
+//		        sb.append(line);
+//		        sb.append(System.lineSeparator());
+		        line = br.readLine();
+		    }
+//		    String everything = sb.toString();
+		} finally {
+		    br.close();
+		}
+	}
+	
+	public static String genAlph(LinkedList<String> alph){
+		String alphStr = "";
+		for (String s : alph)
+			alphStr += s;
+		if (!alphStr.startsWith("["))
+			alphStr = "["+alphStr;
+		if (!alphStr.endsWith("]"))
+			alphStr += "]";
+		return alphStr;
 	}
 }
