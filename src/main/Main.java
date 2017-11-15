@@ -45,7 +45,7 @@ public class Main {
 			}
 			else if(args[i].startsWith("-f=")){
 				String fname = args[i].replace("-f=", "");
-				readFromFile(fname, dom,goals,BCs,alph);
+				readFromFile(fname, dom,BCs,goals,alph);
 			}
 			else if(args[i].startsWith("-alph=")){
 				alph.add(args[i].replace("-alph=", ""));
