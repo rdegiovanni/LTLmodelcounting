@@ -1,0 +1,53 @@
+DOM:
+--Assumption Maintain [LowWaterPressureIffLossOfCoolantOrNormalStartUp/CoolDown]
+G(WaterPressureLow <-> (LossOfCoolant || NormalStartUp || NormalCoolDown))
+
+
+Goals:
+
+--Level 0: Goal Maintain [SafetyInjectionWhenLossOfCoolantExceptDuringStartUp/CoolDown] 
+G((LossOfCoolant && ! (NormalStartUp || NormalCoolDown)) <-> SafetyInjectionSignal)
+
+--Level 0: Goal Avoid [SafetyInjectionDuringNormalStartUpOrCoolDown]
+G((NormalStartUp || NormalCoolDown) -> ! SafetyInjectionSignal)
+
+
+--Level 1: Goal Maintain [SafetyInjectionWhenLowWaterPressure ExceptDuringStartUp/CoolDown]
+G((WaterPressureLow && ! (NormalStartUp || NormalCoolDown)) <-> SafetyInjectionSignal)
+
+
+--Level 2: Goal Maintain [SafetyInjectionOverriddenDuringNormalStartUpAndCoolDown] 
+G ((NormalStartUp || NormalCoolDown) <-> (Overridden))
+
+--Level 2: Goal Maintain [SafetyInjectionWhenLowWaterPressureAndNotOverridden] 
+G((WaterPressureLow && ! Overridden) <-> SafetyInjectionSignal)
+
+--Level 3: Goal Initially [OveriddenIffNormalStartUpOrCoolDown] FormalDef
+(NormalStartUp || NormalCoolDown <-> Overridden)
+
+--*Level 3: Goal Maintain [SafetyInjectionOverriddenWhenNormalStartUpOrCoolDownBegins] 
+--G(X(NormalStartUp || NormalCoolDown)) <-> X(Overridden))
+
+--*Level 3: Goal Maintain [SafetyInjectionEnabledWhenNormalStartUpOrCoolDownEnds] 
+--G(X(! (NormalStartUp || NormalCoolDown)) <-> X(! Overridden))
+
+
+--Level 4: Goal Achieve [ManualBlockWhenStartUp/CoolDownBegins]
+G(X(NormalStartUp || NormalCoolDown) -> X(BlockOn))
+
+--Level 4: Goal Avoid [ManualBlockWhenNoStartUp/CoolDown]
+G(X(! (NormalStartUp || NormalCoolDown)) -> ! BlockOn)
+
+--Level 4: Goal Maintain [SafetyInjectionOverriddenWhenBlockSwitchOn]
+G((X(BlockOn) && ! Overridden) <-> X(Overridden))
+
+
+--Level 4: Goal Maintain [ManualResetOnExitFromStartUp/CoolDown]
+G(X(! (NormalStartUp || NormalCoolDown)) -> X ResetOn)
+
+--Level 4: Goal Maintain [ManualResetOnExitFromStartUp/CoolDown]
+G(X(NormalStartUp || NormalCoolDown) -> X (! ResetOn))
+
+--Level 4:Goal Maintain [SafetyInjectionEnabledWhenManualReset]
+G ((X(ResetOn) && Overridden) <-> X(! Overridden))
+

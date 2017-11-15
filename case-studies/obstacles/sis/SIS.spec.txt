@@ -1,0 +1,53 @@
+DOM:
+--Assumption Maintain [LowWaterPressureIffLossOfCoolantOrNormalStartUp/CoolDown]
+G((a -> (b || c || d)) && ((b || c || d) -> a))
+
+
+Goals:
+
+--Level 0: Goal Maintain [SafetyInjectionWhenLossOfCoolantExceptDuringStartUp/CoolDown] 
+G(((b && ! (c || d)) -> e) && (e -> (b && ! (c || d))))
+
+--Level 0: Goal Avoid [SafetyInjectionDuringNormalStartUpOrCoolDown]
+G((c || d) -> ! e)
+
+
+--Level 1: Goal Maintain [SafetyInjectionWhenLowWaterPressure ExceptDuringStartUp/CoolDown]
+G(((a && ! (c || d)) -> e) && (e -> (a && ! (c || d))))
+
+
+--Level 2: Goal Maintain [SafetyInjectionOverriddenDuringNormalStartUpAndCoolDown] 
+G (((c || d) -> f) && (f -> (c || d)))
+
+--Level 2: Goal Maintain [SafetyInjectionWhenLowWaterPressureAndNotOverridden] 
+G(((a && ! f) -> e) && (e -> (a && ! f)))
+
+--Level 3: Goal Initially [OveriddenIffNormalStartUpOrCoolDown] FormalDef
+((c || d) -> f) && (f -> (c || d))
+
+--*Level 3: Goal Maintain [SafetyInjectionOverriddenWhenNormalStartUpOrCoolDownBegins] 
+--G(X(c || d)) <-> X(f))
+
+--*Level 3: Goal Maintain [SafetyInjectionEnabledWhenNormalStartUpOrCoolDownEnds] 
+--G(X(! (c || d)) <-> X(! f))
+
+
+--Level 4: Goal Achieve [ManualBlockWhenStartUp/CoolDownBegins]
+G(X(c || d) -> X(g))
+
+--Level 4: Goal Avoid [ManualBlockWhenNoStartUp/CoolDown]
+G(X(! (c || d)) -> ! g)
+
+--Level 4: Goal Maintain [SafetyInjectionOverriddenWhenBlockSwitchOn]
+G(((X(g) && ! f) -> X(f)) && ( X(f) -> (X(g) && ! f)))
+
+
+--Level 4: Goal Maintain [ManualResetOnExitFromStartUp/CoolDown]
+G(X(! (c || d)) -> X h)
+
+--Level 4: Goal Maintain [ManualResetOnExitFromStartUp/CoolDown]
+G(X(c || d) -> X (! h))
+
+--Level 4:Goal Maintain [SafetyInjectionEnabledWhenManualReset]
+G (((X(h) && f) -> X(! f)) && (X(! f) -> (X(h) && f)))
+
