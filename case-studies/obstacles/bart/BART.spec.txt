@@ -1,0 +1,36 @@
+DOM:
+--Level 2: Maintain[WCRespOfFollowingTrainToAccCmd]
+G(f -> g)
+G(! f -> ! g)
+
+--Level 2: Avoid[BackwardTrain]
+--G ()
+
+Goals:
+
+--Level 0: Goal Maintain[TrackSegmentSpeedLimit]
+G(a -> b)
+
+--Level 0: Goal Avoid[TrainEnteringClosedGate]
+G((c W d) -> ! (a && X(! a)))
+
+--Level 0: Goal Maintain[WCSDistBetweenTrains]
+--G(Train1InFront -> Train2DistanceOk)
+--G(Train2InFront -> Train1DistanceOk)
+
+--Level 1: Goal Avoid[TrainEnteringTrackInFrontOfCloseTrain]
+G((! e && X(e)) -> ! (a && ! c))
+
+--Level 1: Goal Avoid[TrainEnteringTrackBehingCloseTrain]
+G((! a && X(a)) -> ! (e && ! c))
+
+--Level 1: Goal Maintain[WCSDistBetweenTrainsOnSameTrack]
+G((a && e && c && X(e && c)) -> X(c))
+
+--Level 2: Goal Maintain[SafeAccCmdOfFollowingTrain]
+G((a && e && f && c) -> G(f -> c))
+
+ALPH:
+[a,b,c,d,e,f,g]
+
+

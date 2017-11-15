@@ -1,0 +1,33 @@
+DOM:
+--Level 2: Maintain[WCRespOfFollowingTrainToAccCmd]
+G(TrainAccCmd -> TrainAccelating)
+G(! TrainAccCmd -> ! TrainAccelating)
+
+--Level 2: Avoid[BackwardTrain]
+--G ()
+
+Goals:
+
+--Level 0: Goal Maintain[TrackSegmentSpeedLimit]
+G(TrainOnSegment -> TrainSpeedLimitOk)
+
+--Level 0: Goal Avoid[TrainEnteringClosedGate]
+G((TrainDistanceOk W GateClosed) -> ! (TrainOnSegment && X(! TrainOnSegment)))
+
+--Level 0: Goal Maintain[WCSDistBetweenTrains]
+--G(Train1InFront -> Train2DistanceOk)
+--G(Train2InFront -> Train1DistanceOk)
+
+--Level 1: Goal Avoid[TrainEnteringTrackInFrontOfCloseTrain]
+G((! NewTrainOnSegment && X(NewTrainOnSegment)) -> ! (TrainOnSegment && ! TrainDistanceOk))
+
+--Level 1: Goal Avoid[TrainEnteringTrackBehingCloseTrain]
+G((! TrainOnSegment && X(TrainOnSegment)) -> ! (NewTrainOnSegment && ! TrainDistanceOk))
+
+--Level 1: Goal Maintain[WCSDistBetweenTrainsOnSameTrack]
+G((TrainOnSegment && NewTrainOnSegment && TrainDistanceOk && X(NewTrainOnSegment && TrainDistanceOk)) -> X(TrainDistanceOk))
+
+--Level 2: Goal Maintain[SafeAccCmdOfFollowingTrain]
+G((TrainOnSegment && NewTrainOnSegment && TrainAccCmd && TrainDistanceOk) -> G(TrainAccCmd -> TrainDistanceOk))
+
+
