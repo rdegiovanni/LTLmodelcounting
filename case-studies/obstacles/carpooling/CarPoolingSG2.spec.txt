@@ -1,0 +1,64 @@
+Goals:
+
+--Level 2: Goal Achieve [Passenger At Destination When Ride Planned]
+G(a -> F (b))
+
+
+--Level 3: Goal Achieve [Ride Instructions Known By Riders When Ride Planned] 
+G((c && a) -> F (d && e))
+
+--Level 3: Goal Achieve [Passenger At Destination When Instructions Known]
+G((c && a && d && e) -> F (b))
+----
+
+--Level 4: Goal Achieve [Ride Instructions Sent When Ride Planned]
+G((c && a) -> F (f && g))
+
+--Level 4: Goal Achieve [Ride Instructions Read When Sent]
+G ((f && g) -> F (r && s))
+
+--Level 4: Goal Maintain [Instructions Known If Read]
+G ((r && s) -> G (e && d))
+---
+
+--Level 4: Goal Achieve [Passenger in Driver's Car When Instructions Known]
+G ((c && a && e && d) -> F ( t))
+
+--Level 4: Goal Achieve [Passenger At Destination When In Car]
+G ((c && a && t) -> F (b))
+---
+
+--Level 5: Goal Achieve [Riders At Pickup Point When Instructions Known]
+G ((c && a && d && e) -> F (u && v))
+
+--Level 5: Goal Achieve [Passenger In Driver's Car If Riders At Pickup Point]
+G ((c && a && u && v) -> F (t))
+
+
+--Level 6: Goal Achieve [Passenger At Pickup Point When Instructions Known]
+G ((a && e) -> F (v))
+
+--Level 6: Goal Achieve [Driver At Pickup Point When Instructions Known]
+G ((c && a && d && e) -> F (u))
+
+--level 6: Goal Maintain [Rider Waiting For Other Rider]
+G (v -> (v W u))
+G (u -> (u W v))
+
+
+--
+--Level 5: Goal Achieve [Drop Point Reached When Passenger In Car]
+G ((a && c && t) -> F (w && x))
+      
+--Level 5: Goal Achieve [Passenger At Destination When Drop Point Reached]
+G ((a && w) -> F (b))
+
+
+--Level 6: Goal Maintain [Instructions Known When Passenger In Car]
+G ((a && c && t) -> (d && e))
+
+--Level 6: Goal Achieve [Drop Point From Instructions Reached When Passenger In Car]
+G ((a && c && t) -> F (w && x))
+
+ALPH:
+[a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x]
