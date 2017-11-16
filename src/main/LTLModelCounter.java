@@ -382,9 +382,10 @@ public static String automata2RE(Nba ltl_ba){
 		if(labelIDs.containsKey(l)){
 			return;
 		}
-		String label = ""+Character.toChars(state[0])[0];
-		if(LTLModelCounter.encoded_alphabet==2)
+		String label = "";
+		if(LTLModelCounter.encoded_alphabet==1)
 			label += Character.toChars(state[1])[0];
+		label += Character.toChars(state[0])[0];
 		label += Character.toChars(base)[0];
 		labelIDs.put(l, label); 
 		
