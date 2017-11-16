@@ -123,9 +123,9 @@ public class Main {
 				else{
 					double iTime = System.currentTimeMillis();
 					if(ABC.result){
-						if(LTLModelCounter.encoded_alphabet==1)
+						if(LTLModelCounter.encoded_alphabet==0)
 							count = ABC.count(bound*2);//each state is characterised by 2 characters
-						else if(LTLModelCounter.encoded_alphabet==2)
+						else if(LTLModelCounter.encoded_alphabet==1)
 							count = ABC.count(bound*3);//each state is characterised by 3 characters
 						else
 							count = ABC.count(bound);
